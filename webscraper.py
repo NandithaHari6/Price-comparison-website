@@ -1,11 +1,17 @@
 import sqlite3
 import requests
 from bs4 import BeautifulSoup
-
+import os
 conn=sqlite3.connect("product_sample.db")
 c=conn.cursor()
 # c.execute(""" create table product3(website text, url text, title text,price text) """)
 
+
+def execute_python_file(file_path):
+   try:
+      os.system(f'python {file_path}')
+   except FileNotFoundError:
+      print(f"Error: The file '{file_path}' does not exist.")
 with open('validproxy.txt', "r") as f:
     proxiesSet=f.read().split("\n")
  
@@ -42,7 +48,10 @@ def amazon_scrap_ac(url):
                     
                     conn.commit()
             break
-
+execute_python_file("fetchProxy.py")
+print("Execution of fetch complete")
+execute_python_file("proxyServer.py")
+print("Execution of ProxyServer complete")
 search=input("Enter the product to search for")
 base_url="https://www.amazon.in"
 amazon_scrap_ac(base_url+"/s?k="+search)

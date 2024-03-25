@@ -7,7 +7,7 @@ file2=open("validproxy.txt","w")
 with open('proxylist.txt') as f: 
    
     r=f.read().split("\n")
-    for ele in r:
+    for ele in r[:50]:
         q.put(ele)
 def valid_check():
     
@@ -16,7 +16,7 @@ def valid_check():
         proxy=q.get()
         try:
             
-            r=requests.get("http://ipinfo.io/json",proxies={"http":proxy,"https":proxy})
+            r=requests.get("http://ipinfo.io/json",proxies={"http":proxy,"https":proxy},timeout=3)
         except:
             
             continue
