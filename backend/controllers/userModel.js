@@ -1,7 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 
 // Create a database connection
-const db = new sqlite3.Database('database.db');
+const db = new sqlite3.Database('../../product_sample1.db');
 
 // Create user table if not exists
 db.run(`CREATE TABLE IF NOT EXISTS users (
@@ -15,6 +15,7 @@ const UserModel = {};
 
 // Function to create a new user
 UserModel.createUser = function(email, password, callback) {
+
     db.run('INSERT INTO users (email, password) VALUES (?, ?)', [email, password], function(err) {
         if (err) {
             return callback(err);
