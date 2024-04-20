@@ -16,7 +16,7 @@ def croma_scrap_ac(link):
     soup=bs(driver.page_source,'html.parser')
     products=soup.find_all('li',class_="product-item")
     for product in products:
-        print(product.find('h3',class_="product-title plp-prod-title 999").a.text,end="\n\n")
+        # print(product.find('h3',class_="product-title plp-prod-title 999").a.text,end="\n\n")
         prod_title=product.find('h3',class_="product-title plp-prod-title 999").a
         prod_price=product.find('span',class_="amount plp-srp-new-amount")
                     

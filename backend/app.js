@@ -1,6 +1,6 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
-
+const router=require('./routes/user.js')
 const searchFunction=require('./runPy.js')
 const app = express();
 const port = 3000;
@@ -12,6 +12,7 @@ const db = new sqlite3.Database('../product_sample.db', sqlite3.OPEN_READONLY, (
   }
   console.log('Connected to the database.');
 });
+app.use('/user',router);
 app.get('/search',(req, res) => {
 searchFunction(req.body.search);
 res.send({"msg":"success"})});
