@@ -16,13 +16,13 @@ def flipkart_scrap_ac(link):
        
     if r.status_code==200:
         soup=BeautifulSoup(r.text,'lxml')
-        products=soup.find_all('div',class_="_1AtVbE col-12-12")
+        products=soup.find_all('div',class_="cPHDOP col-12-12")
         for product in products:
-                prod_title=product.find('div',class_="_4rR01T")
-                prod_link=product.find('a',class_="_1fQZEK")
-                prod_price=product.find('div',class_="_30jeq3 _1_WHN1")
+                prod_title=product.find('div',class_="KzDlHZ")
+                prod_link=product.find('a',class_="CGtC98")
+                prod_price=product.find('div',class_="Nx9bqj _4b5DiR")
                 
-                prod_image = product.find('img',class_="_396cs4")
+                prod_image = product.find('img',class_="DByuf4")
                 
                 title= prod_title.text if prod_title is not None else "none"
                 

@@ -5,5 +5,10 @@ def process_title(title):
     elif '5g' in title:
         title=title.split('5g')[0]
     else:
-        title=title.split(' ')[:6]
+        array=title.split(' ')[:6]
+        for i in array:
+            title+=str(i)
+            
+
+    
     return title

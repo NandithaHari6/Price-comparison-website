@@ -2,9 +2,9 @@ import sqlite3
 conn=sqlite3.connect("product_sample.db")
 c=conn.cursor()
 # c.execute("Drop table product3")
-# c.execute("Delete  from flipkart")
-# c.execute("Delete  from croma")
-# c.execute("Delete  from amazon")
+c.execute("Delete  from flipkart")
+c.execute("Delete  from croma")
+c.execute("Delete  from amazon")
 
 
 # c.execute("Drop table flipkart")
@@ -27,7 +27,7 @@ c=conn.cursor()
 # full join to get all matching products together
 
 # c.execute(""" select  flipkart_set.title,amazon_set.title,croma_set.title,flipkart_set.short_title from amazon_set left join flipkart_set on flipkart_set.short_title=amazon_set.short_title left join croma_set on croma_set.short_title=flipkart_set.short_title UNION  select  flipkart_set.title,amazon_set.title,croma_set.title,flipkart_set.short_title from amazon_set right join flipkart_set on flipkart_set.short_title=amazon_set.short_title right join croma_set on croma_set.short_title=flipkart_set.short_title """)
-c.execute("Create table wishlist(user_email text, product_id number) ")
+# c.execute("Create table wishlist(user_email text, product_id number) ")
 
 # res=c.fetchall()
 
