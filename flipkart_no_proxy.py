@@ -51,7 +51,7 @@ def flipkart_scrap_ac(link):
         
         
         
-                    insert_into_db("Flipkart",link,title,price,prod_company, image,processed_title)
+                    insert_into_db("Flipkart",base_url+link,title,price,prod_company, image,processed_title)
                         
                     
           

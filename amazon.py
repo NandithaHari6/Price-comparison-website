@@ -9,7 +9,7 @@ def amazon_scrap_ac(link):
     
     
     with open('validproxy.txt', "r") as f:
-        proxiesSet=f.read().split("\n") 
+        proxiesSet=f.read().split("\n")[:50] 
     count=0
     while len(proxiesSet) > 0:
         try:
@@ -35,6 +35,6 @@ def amazon_scrap_ac(link):
                 if "none" not in title:
                     processed_title=process_title(title)
                     prod_company = title.split(" ", 1)[0]
-                    insert_into_db("Amazon",link,title,price,prod_company, image,processed_title)
+                    insert_into_db("Amazon",base_url+link,title,price,prod_company, image,processed_title)
             break
    

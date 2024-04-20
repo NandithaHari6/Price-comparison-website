@@ -32,7 +32,7 @@ def croma_scrap_ac(link):
             processed_title = process_title(title)
             print(f" Croma {title} {processed_title} {price}")
             prod_company = title.split(" ", 1)[0]
-            insert_into_db("Croma",link,title,price,prod_company, image,processed_title)
+            insert_into_db("Croma",base_url+link,title,price,prod_company, image,processed_title)
             
            
         
