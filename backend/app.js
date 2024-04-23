@@ -6,7 +6,7 @@ const app = express();
 const port = 3000;
 app.use(express.json());
 // Connect to SQLite database
-const db = new sqlite3.Database('../product_sample.db', sqlite3.OPEN_READONLY, (err) => {
+const db = new sqlite3.Database('product_sample.db', sqlite3.OPEN_READONLY, (err) => {
   if (err) {
     console.error(err.message);
   }
