@@ -1,12 +1,23 @@
 import sqlite3
 conn=sqlite3.connect("product_sample.db")
 c=conn.cursor()
-# c.execute("Drop table product3")
-c.execute("Delete  from flipkart")
-c.execute("Delete  from croma")
-c.execute("Delete  from amazon")
+# # c.execute("Drop table product3")
+# c.execute("Delete from flipkart")
+# c.execute("Delete from Croma")
+# c.execute("Delete from Amazon")
+c.execute("Drop table grouping")
+# c.execute("Drop table if exists grouping")
 
-
+# c.execute("""Create table grouping(productId int,a_url,a_price,a_image,a_title,a_short,f_url,f_price,f_image,f_title,f_short,c_url,c_price,c_image,c_title,c_short)""")
+# c.execute("Select * from grouping1")
+# res=c.fetchall()
+# for r in res:
+#     print(r[0])
+#     c.execute("""insert into grouping(a_url) values(?)""",r[0])
+#     c.execute("""insert into grouping(a_url,a_price,a_image,a_title,a_short,f_url,f_price,f_image,f_title,f_short,c_url,c_price,c_image,c_title,c_short) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?  )""",r)
+# # c.execute("Drop view amazon_set")
+# c.execute("Drop view flipkart_set")
+# c.execute("Drop view croma_set")
 # c.execute("Drop table flipkart")
 # c.execute("Drop table amazon")
 # c.execute("Drop table croma")

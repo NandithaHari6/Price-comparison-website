@@ -1,14 +1,35 @@
-const { spawn}=require('child_process');
-function searchProduct(searchWord){
-const dataRead=[];
-    const childPy=spawn('python',['../webscraper.py',...searchWord]);
-    childPy.stdout.on('data',(data)=>{
-        dataRead=data;
-        console.log(`${data}`);
-    })
+const { spawn } = require('child_process');
 
-    childPy.stderr.on('data',(data)=>{console.log(data);});
-    childPy.on('close',()=>{console.log('Closed');});
-return dataRead;}
-searchProduct("Smart Phones")
-    module.exports = searchProduct;
+function runPythonScript(scriptPath, args) {
+    return new Promise((resolve, reject) => {
+        const pythonProcess = spawn('python', [scriptPath, ...args]);
+
+        let output = '';
+        let errorOutput = '';
+
+
+        pythonProcess.stderr.on('data', (data) => {
+            errorOutput += data.toString();
+        });
+        
+        pythonProcess.on('close', (code) => {
+            if (code === 0) {
+                resolve(output);
+            } else {
+                reject(errorOutput || `Python script exited with code ${code}`);
+            }
+        });
+    });
+}
+
+// Usage
+const scriptPath = '..\\webscraper.py';
+const args = ['oppo', 'phone']; // Array of command-line arguments
+
+runPythonScript(scriptPath, args)
+    .then((output) => {
+        console.log(`Python script output: ${output}`);
+    })
+    .catch((error) => {
+        console.error(`Error: ${error}`);
+    });
