@@ -30,5 +30,5 @@ amazon_scrap_ac("/s?k="+search)
 flipkart_scrap_ac("/search?q="+search)
 
 croma_scrap_ac("searchB?q="+search+"%3Arelevance&text="+search)
-# print("Completed successfully")
+print("Completed successfully")
 create_grouping()
