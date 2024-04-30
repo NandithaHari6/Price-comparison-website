@@ -1,7 +1,7 @@
 const sqlite3 = require('sqlite3').verbose();
 
 // Create a database connection
-const db = new sqlite3.Database('../../product_sample1.db');
+const db = new sqlite3.Database('C:\Users\Rinu Joseph\Price-comparison-website\product_sample.db');
 
 // Create user table if not exists
 db.run(`CREATE TABLE IF NOT EXISTS users (

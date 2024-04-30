@@ -1,11 +1,11 @@
 const sqlite3 = require('sqlite3').verbose();
 
 // Create a database connection
-const db = new sqlite3.Database('../../product_sample1.db');
-const searchFunction=require('../runPy')
+const db = new sqlite3.Database('C:\Users\Rinu Joseph\Price-comparison-website\product_sample.db');
+
 function search(req, res)
  {
-    searchFunction(req.body.search)
+    
     
     // const sql = 'SELECT * FROM grouping'; // Modify 'your_table' to your actual table name
   
