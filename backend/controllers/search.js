@@ -6,11 +6,16 @@ const parent=path.resolve(__dirname, '../../')
 const absoluteFilePath = path.join(parent, 'product_sample.db');
 // Create a database connection
 <<<<<<< HEAD
+<<<<<<< HEAD
 const db = new sqlite3.Database('C:\Users\Rinu Joseph\Price-comparison-website\product_sample.db');
+=======
+const db = new sqlite3.Database(absoluteFilePath);
+>>>>>>> f91a40051ec59b2a316e30bb5cc360219aa72ad6
 
 function search(req, res)
  {
     
+<<<<<<< HEAD
 =======
 const db = new sqlite3.Database(absoluteFilePath);
 
@@ -18,6 +23,8 @@ function search(req, res)
  {
 >>>>>>> 8b132d3833515654f3add6f915851c4a778d5480
     
+=======
+>>>>>>> f91a40051ec59b2a316e30bb5cc360219aa72ad6
     
     const sql = 'SELECT * FROM grouping1'; // Modify 'your_table' to your actual table name
   
