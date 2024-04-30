@@ -71,6 +71,9 @@ const Nav = ({searchbtn}) => {
                 <li>
                     <Link to='/contact'className='link'>Contact Us</Link>
                 </li>
+                <li>
+                    <Link to='/login'className='link'>Login</Link>
+                </li>
             </ul>
             </div>
             <div className='auth' >

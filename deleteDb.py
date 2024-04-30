@@ -1,12 +1,35 @@
 import sqlite3
 conn=sqlite3.connect("product_sample.db")
 c=conn.cursor()
-# c.execute("Drop table product3")
-c.execute("Delete  from flipkart")
-c.execute("Delete  from croma")
-c.execute("Delete  from amazon")
-
-
+c.execute("""CREATE TABLE IF NOT EXISTS users (
+    id INTEGER PRIMARY KEY AUTOINCREMENT,
+    email TEXT UNIQUE,
+    password TEXT,
+    phoneNo INTEGER,
+    name TEXT
+)""")
+c.execute(""" create table if not exists amazon(website text, url text, title text,price text, company text, image text,short_title text)""") 
+c.execute(""" create table if not exists flipkart(website text, url text, title text,price text, company text, image text,short_title text)""") 
+c.execute(""" create table if not exists croma(website text, url text, title text,price text, company text, image text,short_title text)""")
+# # c.execute("Drop table product3")
+# c.execute("Delete from flipkart")
+# c.execute("Delete from Croma")
+# c.execute("Delete from Amazon")
+# c.execute("Drop table users")
+# c.execute("Drop table if exists ")
+#c.execute("Drop table if exists WishlistEntry")
+#c.execute("Drop table if exists WishlistProduct")
+# c.execute("Create table users(id int auto_increment primary key, email text,password text,phoneNo int,name text)")
+# c.execute("""Create table grouping(productId int,a_url,a_price,a_image,a_title,a_short,f_url,f_price,f_image,f_title,f_short,c_url,c_price,c_image,c_title,c_short)""")
+# c.execute("Select * from grouping1")
+# res=c.fetchall()
+# for r in res:
+#     print(r[0])
+#     c.execute("""insert into grouping(a_url) values(?)""",r[0])
+#     c.execute("""insert into grouping(a_url,a_price,a_image,a_title,a_short,f_url,f_price,f_image,f_title,f_short,c_url,c_price,c_image,c_title,c_short) values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?  )""",r)
+# # c.execute("Drop view amazon_set")
+# c.execute("Drop view flipkart_set")
+# c.execute("Drop view croma_set")
 # c.execute("Drop table flipkart")
 # c.execute("Drop table amazon")
 # c.execute("Drop table croma")

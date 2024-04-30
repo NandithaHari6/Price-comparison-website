@@ -5,9 +5,9 @@ const UserModel=require("./userModel")
 // User registration
  async function signup(req, res)  {
 try {
-const { email, password } = req.body;
+const { email, password, phoneNo , name } = req.body;
 const hashedPassword = await bcrypt.hash(password, 10);
-UserModel.createUser(email,hashedPassword, (err, email) => {
+UserModel.createUser(email,hashedPassword,phoneNo,name ,(err, email) => {
     if (err) {
         console.error('Error creating user:', err);
     } else {

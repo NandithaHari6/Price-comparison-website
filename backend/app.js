@@ -1,10 +1,16 @@
 const express = require('express');
 const sqlite3 = require('sqlite3').verbose();
 const router=require('./routes/user.js')
+<<<<<<< HEAD
 
+=======
+const cors = require('cors');
+>>>>>>> 8b132d3833515654f3add6f915851c4a778d5480
 const app = express();
-const port = 3000;
+const port = 4000;
+app.use(cors());
 app.use(express.json());
+<<<<<<< HEAD
 // Connect to SQLite database
 const db = new sqlite3.Database('C:\Users\Rinu Joseph\Price-comparison-website\product_sample.db', sqlite3.OPEN_READONLY, (err) => {
   if (err) {
@@ -12,6 +18,10 @@ const db = new sqlite3.Database('C:\Users\Rinu Joseph\Price-comparison-website\p
   }
   console.log('Connected to the database.');
 });
+=======
+
+
+>>>>>>> 8b132d3833515654f3add6f915851c4a778d5480
 app.use('/user',router);
 
 

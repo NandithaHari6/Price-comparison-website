@@ -9,7 +9,7 @@ const {  search }=require('../controllers/search')
 router.post('/signup',signup)
 router.post('/login',login )
 router.post('/addToWishlist',verifyToken,addToWishlist)
-router.post('/search',search)
+router.get('/search',search)
 // router.get('/displayWishlist',displayWishlist)
 // router.get('/logout',logout )
 

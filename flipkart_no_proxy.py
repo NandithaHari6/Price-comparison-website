@@ -32,7 +32,7 @@ def flipkart_scrap_ac(link):
                 image=(prod_image.get('src')) if prod_image is not None else "error"
                 if "none" not in title:
                     processed_title=process_title(title)
-                    print(f"Flipkart {title}  {price} {processed_title}")
+                #     print(f"Flipkart {title}  {price} {processed_title}")
                     prod_company = title.split(" ", 1)[0]
                     new_url=base_url+link
 
@@ -51,7 +51,7 @@ def flipkart_scrap_ac(link):
         
         
         
-                    insert_into_db("Flipkart",base_url+link,title,price,prod_company, image,processed_title)
+                    insert_into_db("flipkart",base_url+link,title,price,prod_company, image,processed_title)
                         
                     
           

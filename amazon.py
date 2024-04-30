@@ -13,7 +13,8 @@ def amazon_scrap_ac(link):
     count=0
     while len(proxiesSet) > 0:
         try:
-            r=requests.get(url,proxies={"http":proxiesSet[count],"https":proxiesSet[count]},timeout=3)
+            # ,proxies={"http":proxiesSet[count],"https":proxiesSet[count]},timeout=3
+            r=requests.get(url)
 
         except:
             continue
