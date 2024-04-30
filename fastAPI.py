@@ -62,17 +62,17 @@ async def signup(user: User):
 @app.post("/search/")
 def scrap_websites(req:Search):
     search=req.searchWord
-    # deleteTable()
-    # amazon_scrap_ac("/s?k="+search)
-    # flipkart_scrap_ac("/search?q="+search)
-    # croma_scrap_ac("searchB?q="+search+"%3Arelevance&text="+search)
-    # create_grouping()
+    deleteTable()
+    amazon_scrap_ac("/s?k="+search)
+    flipkart_scrap_ac("/search?q="+search)
+    croma_scrap_ac("searchB?q="+search+"%3Arelevance&text="+search)
+    create_grouping()
     conn=sqlite3.connect('product_sample.db')
     c=conn.cursor()
     c.execute("Select * from grouping")
     rows=c.fetchall()
     formatted_data = []
-    for row in rows[:10]:
+    for row in rows:
         dict={'productId':row[0],
               'title':row[1],
               'image':row[2],
@@ -87,13 +87,13 @@ def scrap_websites(req:Search):
         formatted_data.append(dict)
     
     
-    return formatted_data
+    
 
 
     conn.commit()
     conn.close()
-    return row
-
+    
+    return formatted_data
 
 @app.post("/login/")
 async def login(user:LoginUser):
