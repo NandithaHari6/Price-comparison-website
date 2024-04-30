@@ -6,8 +6,9 @@ import { CiLogout } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
 import Logo from "./img/logo.svg";
+
 import './nav.css'
-const Nav = ({searchbtn}) => {
+const Nav = ({searchbtn,isLoggedIn}) => {
     const [search, setSearch] = useState('');
     const { loginWithRedirect, logout, user, isAuthenticated} = useAuth0();
     const [showUserDetails, setShowUserDetails] = useState(false);
@@ -19,7 +20,7 @@ const Nav = ({searchbtn}) => {
     }, [isAuthenticated]);
 
     const handleUserIconClick = () => {
-        if (!isAuthenticated) {
+        if (!isLoggedIn) {
             loginWithRedirect();
         }
         else {
@@ -71,9 +72,14 @@ const Nav = ({searchbtn}) => {
                 <li>
                     <Link to='/contact'className='link'>Contact Us</Link>
                 </li>
-                <li>
-                    <Link to='/login'className='link'>Login</Link>
-                </li>
+                {
+                    !isLoggedIn && (
+                        <li>
+                        <Link to='/login'className='link'>Login</Link>
+                    </li>
+                    )
+                }
+                
             </ul>
             </div>
             <div className='auth' >

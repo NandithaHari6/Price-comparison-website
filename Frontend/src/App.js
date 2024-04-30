@@ -4,15 +4,17 @@ import Rout from "./rout";
 import { BrowserRouter  } from "react-router-dom";
 import Footer from './footer';
 import './App.css';
+
 import Productdetail from './productdetail';
 
 const App = () => {
   // add to cart
   const [cart, setCart] = useState([])
   //product Detail
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [close, setClose] = useState(false)
   const [detail, setDetail] = useState([])
-  //filter product
+ 
   const [product, setProduct] = useState(Productdetail)
   const searchbtn = (product) => 
   {
@@ -49,9 +51,11 @@ const App = () => {
   console.log(cart)
   return (
     <>
+    
     <BrowserRouter>
-    <Nav searchbtn={searchbtn}/>
-    <Rout product={product} setProduct={setProduct} detail={detail} view={view} close={close} setClose={setClose} cart={cart} setCart={setCart} addtocart={addtocart}/>
+    <Nav searchbtn={searchbtn} isLoggedIn={isLoggedIn}/>
+    <Rout product={product} setProduct={setProduct} detail={detail} view={view} close={close} setClose={setClose} cart={cart} setCart={setCart} addtocart={addtocart}
+    isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
     <Footer />
     </BrowserRouter>
     </>
