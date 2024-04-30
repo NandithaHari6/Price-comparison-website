@@ -1,5 +1,5 @@
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, HTTPException,Depends
 from pydantic import BaseModel
 from typing import Optional
 from amazon import amazon_scrap_ac
@@ -9,9 +9,32 @@ from prod_db_op import create_grouping,deleteTable
 import sqlite3
 import jwt
 from datetime import datetime, timedelta
-from userSignup import is_email_present,insertUser,loginAuth
+from userSignup import is_email_present,insertUser
+from login import create_access_token,login_auth,is_authenticated
+from addToWishlist import create_connection,create_product_table,create_wishlist_table
+from fastapi.middleware.cors import CORSMiddleware
+import json
 app = FastAPI()
 
+
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_credentials=True,
+    allow_methods=["GET", "POST", "PUT", "DELETE"],
+    allow_headers=["*"],
+)
+
+class Product(BaseModel):
+    ProductId: int
+    Title: str
+    image: str
+    amazon_link: str 
+    amazon_price: str 
+    flipkart_link: str 
+    f_price: str 
+    Croma_link: str 
+    c_price: str 
 class LoginUser(BaseModel):
     email: str
     password: str
@@ -22,6 +45,10 @@ class User(BaseModel):
     password: str
 class Search(BaseModel):
     searchWord:str
+class Wishlist(BaseModel):
+    productId:int
+    targetPrice:float
+   
 users_db = {}
 @app.post("/signup/")
 async def signup(user: User):
@@ -35,39 +62,85 @@ async def signup(user: User):
 @app.post("/search/")
 def scrap_websites(req:Search):
     search=req.searchWord
-    deleteTable()
-    amazon_scrap_ac("/s?k="+search)
-    flipkart_scrap_ac("/search?q="+search)
-    croma_scrap_ac("searchB?q="+search+"%3Arelevance&text="+search)
-
-    create_grouping()
+    # deleteTable()
+    # amazon_scrap_ac("/s?k="+search)
+    # flipkart_scrap_ac("/search?q="+search)
+    # croma_scrap_ac("searchB?q="+search+"%3Arelevance&text="+search)
+    # create_grouping()
     conn=sqlite3.connect('product_sample.db')
     c=conn.cursor()
+    c.execute("Select * from grouping")
+    rows=c.fetchall()
+    formatted_data = []
+    for row in rows[:10]:
+        dict={'productId':row[0],
+              'title':row[1],
+              'image':row[2],
+              'a_link':row[3],
+              'a_price':row[4],
+              'f_link':row[5],
+              'f_price':row[6],
+              'c_link':row[7],
+              'c_price':row[8]
+              }
+        
+        formatted_data.append(dict)
     
     
-    c.execute("Select * from grouping1")
-    row=c.fetchall()
+    return formatted_data
+
+
     conn.commit()
     conn.close()
     return row
 
 
-# Secret key for JWT token encoding (keep it secret in production)
-SECRET_KEY = "your-secret-key"
-ALGORITHM = "HS256"
-ACCESS_TOKEN_EXPIRE_MINUTES = 30  # Token expiration time
-
 @app.post("/login/")
 async def login(user:LoginUser):
-    
-    
-    if loginAuth(user.email,user.password)==0:
+    if not login_auth(user.email, user.password):
         raise HTTPException(status_code=401, detail="Incorrect username or password")
-    # Generate JWT token
-    access_token_expires = datetime.now() + timedelta(minutes=ACCESS_TOKEN_EXPIRE_MINUTES)
-    access_token_payload = {"sub": user.email, "exp": access_token_expires}
-    access_token = jwt.encode(access_token_payload, SECRET_KEY, algorithm=ALGORITHM)
-    
+    access_token = create_access_token({"email": user.email})
     return {"access_token": access_token, "token_type": "bearer"}
 
+@app.post("/add_to_wishlist/")
+async def add_to_wishlist(wish:Wishlist,email: str = Depends(is_authenticated)):
+    conn = create_connection()
+    create_product_table(conn)
+    create_wishlist_table(conn)  
+    cursor = conn.cursor()
+    cursor.execute('SELECT * FROM grouping WHERE productId=?',[wish.productId])
+    row = cursor.fetchone()
+    if not row:
+        raise HTTPException(status_code=404, detail="Product not found")
+    print(row)
+    title = row[0]  # Assuming title is the second column in grouping1 table
+    image = row[1]  # Assuming image is the third column in grouping1 table
     
+    cursor.execute("""insert into WishlistProduct(title ,
+        image ,
+        a_url ,
+        a_price ,
+        f_url ,
+        f_price,
+        c_url ,
+        c_price ) values(?,?,?,?,?,?,?,?)""",(title,image,row[2],row[3],row[4],row[5],row[6],row[7]))
+    product_id = cursor.lastrowid
+    conn.commit()
+    cursor.execute('''
+        INSERT INTO WishlistEntry (email, productId, targetPrice)
+        VALUES (?, ?, ?)
+    ''', (email, product_id, wish.targetPrice))
+    conn.commit()
+    conn.close()
+    return {"message": "Added to WishList"}
+
+    
+@app.get('/show_wishlist')
+async def show_wishlist(email: str = Depends(is_authenticated)):
+    conn=create_connection()
+    c=conn.cursor()
+    c.execute("SELECT * FROM WishlistProduct where productId in (Select productId from WishlistEntry where email=?)",[email])
+    row=c.fetchall()
+    conn.commit()
+    conn.close()
+    return row
