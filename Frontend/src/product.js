@@ -4,7 +4,10 @@ import './product.css';
 function ProductPage({ isLoggedIn, searchWord, searchResults, setSearchResults }) {
 
   const [loading, setLoading] = useState(true);
-
+  const [showPopup, setShowPopup] = useState(0);
+  const [targetPrice, setTargetPrice] = useState('');
+  const accessToken = localStorage.getItem('accessToken');
+ 
   useEffect(() => {
 
     if (searchResults.length > 0) {
@@ -12,7 +15,20 @@ function ProductPage({ isLoggedIn, searchWord, searchResults, setSearchResults }
     }
   }, [searchResults]);
 
+ const handlePopupClose = () => {
+    setShowPopup(0);
+    setTargetPrice('');
+  };
 
+  const handleAddClick = (productId) => {
+    setShowPopup(productId);
+  };
+
+  const handleAddToWishlistClick = (productId) => {
+    handleAddToWishlist(productId, targetPrice);
+    setShowPopup(0);
+    setTargetPrice('');
+  };
   const handleAddToWishlist = async (productId, targetPrice) => {
     if (!isLoggedIn) {
       return;
@@ -22,6 +38,7 @@ function ProductPage({ isLoggedIn, searchWord, searchResults, setSearchResults }
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}`
         },
         body: JSON.stringify({ productId, targetPrice }),
       });
@@ -55,10 +72,24 @@ function ProductPage({ isLoggedIn, searchWord, searchResults, setSearchResults }
                 {product.c_link && <a href={product.c_link} target="_blank">Croma</a>}
                 {product.c_price && <p>Croma Price: {product.c_price}</p>}
                 {isLoggedIn && (
-                  <button onClick={() => handleAddToWishlist(product.productId, product.targetPrice)}>
-                    Add to Wishlist
-                  </button>
-                )}
+        <div>
+          <button onClick={()=>{
+            handleAddClick(product.productId)}}>Add to Wishlist</button>
+          {showPopup === product.productId && (
+            <div className="popup">
+              <div className="popup-content">
+                <span className="close" onClick={handlePopupClose}>&times;</span>
+                <h2>Enter Target Price</h2>
+                <input type="number" value={targetPrice} onChange={(e) => setTargetPrice(e.target.value)} />
+                <button onClick={()=>{
+                  handleAddToWishlistClick(product.productId)
+                }
+                  }>Add to Wishlist</button>
+              </div>
+            </div>
+          )}
+        </div>
+      )}
               </div>
             </div>
           ))
