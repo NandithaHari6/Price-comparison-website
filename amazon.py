@@ -2,7 +2,7 @@ import requests
 from bs4 import BeautifulSoup
 from  prod_db_op import insert_into_db
 from process_title import process_title
-def amazon_scrap_ac(link):
+def amazon_scrap_ac(link,page):
     global count
     base_url="https://www.amazon.in"
     url = base_url + link
@@ -23,6 +23,7 @@ def amazon_scrap_ac(link):
         if r.status_code==200:
             soup=BeautifulSoup(r.text,'lxml')
             products=soup.find_all('span',class_="a-declarative")
+            next = soup.find('a', class_="s-pagination-item s-pagination-button")
             for product in products:
                 prod_title=product.find('span',class_="a-size-medium a-color-base a-text-normal")
                 prod_link=product.find('a',class_="a-link-normal s-underline-text s-underline-link-text s-link-style a-text-normal")
@@ -38,4 +39,5 @@ def amazon_scrap_ac(link):
                     prod_company = title.split(" ", 1)[0]
                     insert_into_db("Amazon",base_url+link,title,price,prod_company, image,processed_title)
             break
-   
+    if page < 1:
+        amazon_scrap_ac(next['href'], page+1)  

@@ -24,7 +24,8 @@ app.add_middleware(
     allow_methods=["GET", "POST", "PUT", "DELETE"],
     allow_headers=["*"],
 )
-
+def count_null_values(dictionary):
+    return sum(1 for value in dictionary.values() if value is None)
 class LoginUser(BaseModel):
     email: str
     password: str
@@ -38,7 +39,8 @@ class Search(BaseModel):
 class Wishlist(BaseModel):
     productId:int
     targetPrice:float
-   
+class Product(BaseModel):
+    productId:int 
 users_db = {}
 @app.post("/signup/")
 async def signup(user: User):
@@ -47,16 +49,18 @@ async def signup(user: User):
     else:
        user_id= insertUser(user.email,user.password,user.phoneNo,user.name)
     
-    return {"message": "User created successfully with id   ","user_id":user_id}
+    return {"message": "Success ","user_id":user_id}
 
 @app.post("/search/")
 def scrap_websites(req:Search):
     search=req.searchWord
-    # deleteTable()
-    # amazon_scrap_ac("/s?k="+search)
-    # flipkart_scrap_ac("/search?q="+search)
-    # croma_scrap_ac("searchB?q="+search+"%3Arelevance&text="+search)
-    # create_grouping()
+    deleteTable()
+    search.replace(" ", "+")
+    amazon_scrap_ac("/s?k="+search , 0)
+    search.replace("+", "%20")
+    flipkart_scrap_ac("/search?q="+search,0)
+    croma_scrap_ac("/searchB?q=" + search + "%3Arelevance&text=" + search)
+    create_grouping()
     conn=sqlite3.connect('product_sample.db')
     c=conn.cursor()
     c.execute("Select * from grouping")
@@ -74,6 +78,9 @@ def scrap_websites(req:Search):
               'c_price':row[8]
               }
         
+
+# Sort the list of dictionaries based on the count of null values
+        formatted_data = sorted(formatted_data, key=count_null_values)
         formatted_data.append(dict)
     conn.commit()
     conn.close()
@@ -116,9 +123,16 @@ async def add_to_wishlist(wish:Wishlist,email: str = Depends(is_authenticated)):
     ''', (email, product_id, wish.targetPrice))
     conn.commit()
     conn.close()
-    return {"message": "Added to WishList"}
+    return {"message": "Success"}
 
-    
+@app.post('/delete_wishlist/')
+async def delete_wishlist(prod:Product,email: str = Depends(is_authenticated)):
+    conn=create_connection()
+    c=conn.cursor()
+    c.execute("Delete from WishlistEntry where email=? and productId=?",[email,prod.productId])
+    conn.commit()
+    conn.close()
+    return {"message": "Success"}
 @app.get('/show_wishlist')
 async def show_wishlist(email: str = Depends(is_authenticated)):
     conn=create_connection()
@@ -137,6 +151,7 @@ async def show_wishlist(email: str = Depends(is_authenticated)):
               'c_link':row[7],
               'c_price':row[8]
               }
+        
         c.execute("Select targetPrice from WishlistEntry where email=? and productId=?",[email,row[0]])
         res=c.fetchone()
         dict.update({'targetPrice':float(res[0])})
