@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import Popup from './Popup'
+import './product.css';
+
 function ProductPage({ isLoggedIn,searchWord,searchResults,setSearchResults}) {
 
   const [loading, setLoading] = useState(true);
