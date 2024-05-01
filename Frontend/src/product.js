@@ -1,110 +1,85 @@
-import React from 'react'
-import { AiOutlineShoppingCart } from 'react-icons/ai';
-import { BsEye } from 'react-icons/bs';
-import { AiOutlineHeart, AiOutlineCloseCircle } from 'react-icons/ai';
-import { useAuth0 } from "@auth0/auth0-react";
-import Productdetail from './productdetail'
-import './product.css'
-const Product = ({product, setProduct, detail, view, close, setClose, addtocart}) => {
+import React, { useState, useEffect } from 'react';
 
+function ProductPage({ isLoggedIn }) {
+  const [searchWord, setSearchWord] = useState('');
+  const [searchResults, setSearchResults] = useState([]);
+  const [loading, setLoading] = useState(true);
 
-    const { loginWithRedirect,isAuthenticated} = useAuth0();
-    const filtterproduct = (product) =>
-    {
-        const update = Productdetail.filter((x) => 
-        {
-           return x.Cat === product;
-        })
-        setProduct(update);
+  useEffect(() => {
+    if (searchResults.length > 0) {
+      setLoading(false); // Set loading to false once search results are available
     }
-    const AllProducts = () => 
-    {
-        setProduct(Productdetail)
+  }, [searchResults]);
+
+  const handleSearch = async () => {
+    try {
+      const response = await fetch('http://127.0.0.1:8000/search', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ searchWord }),
+      });
+      const data = await response.json();
+      setSearchResults(data);
+      console.log(searchResults);
+    } catch (error) {
+      console.error(error);
     }
+  };
+
+  const handleAddToWishlist = async (productId, targetPrice) => {
+    if (!isLoggedIn) {
+      return;
+    }
+    try {
+      const response = await fetch('http://127.0.0.1:8000/add_to_wishlist', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productId, targetPrice }),
+      });
+      const data = await response.json();
+      console.log(data);
+      // Show success message or handle response accordingly
+    } catch (error) {
+      console.error(error);
+    }
+  };
+
   return (
-    <>
-    {
-        close ?
-        <div className='product_detail'>
-        <div className='container'>
-            <button onClick={() => setClose(false)} className='closebtn'><AiOutlineCloseCircle /></button>
-            {
-                detail.map((curElm) => 
-                {
-                    return(
-                        <div className='productbox'>
-                            <div className='img-box'>
-                                <img src={curElm.Img} alt={curElm.Title}></img>
-                            </div>
-                            <div className='detail'>
-                                <h4>{curElm.Cat}</h4>
-                                <h2>{curElm.Title}</h2>
-                                <p>A Screen Everyone Will Love: Whether your family is streaming or video chatting with friends tablet A8... </p>
-                                <h3>{curElm.Price}</h3>
-                                <button>Add To Cart</button>
-                            </div>
-                        </div>
-                    )
-                })
-            }
-            <div className='productbox'></div>
-        </div>
-    </div> : null
-    }
-    <div className='products'>
-        <h2># Products</h2>
-        <p>Home . products</p>
-        <div className='container'>
-            <div className='filter'>
-                <div className='categories'>
-                    <h3>categories</h3>
-                    <ul>
-                    <li onClick={() => AllProducts ()}>All Products</li>
-                        <li onClick={() => filtterproduct ("Tablet")}>Tablet</li>
-                        <li onClick={() => filtterproduct ("Smart Watch")}>Smart Watch</li>
-                        <li onClick={() => filtterproduct ("Headphone")}>Headphone</li>
-                        <li onClick={() => filtterproduct ("Camera")}>Camera</li>
-                        <li onClick={() => filtterproduct ("Gaming")}>Gaming</li>
-                    </ul>
-                </div>
+    <div>
+      <h2>Product Page</h2>
+      <div>
+        <input type="text" value={searchWord} onChange={(e) => setSearchWord(e.target.value)} />
+        <button onClick={handleSearch}>Search</button>
+      </div>
+      <div>
+        {loading ? (
+          <p>Loading...</p>
+        ) : (
+          searchResults.map((product) => (
+            <div key={product.productId}>
+              <h3>{product.title}</h3>
+              {product.image && <img src={product.image} alt="Product" />}
+              {product.a_link && <a href={product.a_link}>Amazon</a>}
+              {product.a_price && <p>Amazon Price: {product.a_price}</p>}
+              {product.f_link && <a href={product.f_link}>Flipkart</a>}
+              {product.f_price && <p>Flipkart Price: {product.f_price}</p>}
+              {product.c_link && <a href={product.c_link}>Croma</a>}
+              {product.c_price && <p>Croma Price: {product.c_price}</p>}
+              {isLoggedIn && (
+                <button onClick={() => handleAddToWishlist(product.ProductId, product.targetPrice)}>
+                  Add to Wishlist
+                </button>
+              )}
             </div>
-            <div className='productbox'>
-                <div className='contant'>
-                    {
-                        product.map((curElm) => 
-                        {
-                            return(
-                                <>
-                                    <div className='box' key={curElm.id}>
-                                        <div className='img_box'>
-                                          <img src={curElm.Img} alt={curElm.Title}></img>
-                                          <div className='icon'>
-                                            {
-                                                isAuthenticated ? 
-                                                <li onClick={() => addtocart (curElm)}><AiOutlineShoppingCart /></li>
-                                                :
-                                                <li onClick={() => loginWithRedirect()}><AiOutlineShoppingCart /></li>
-                                            }
-                                            <li onClick={() => view (curElm)}><BsEye /></li>
-                                            <li><AiOutlineHeart /></li>                                     
-                                          </div>
-                                        </div>
-                                        <div className='detail'>
-                                          <p>{curElm.Cat}</p>
-                                          <h3>{curElm.Title}</h3>
-                                          <h4>${curElm.Price}</h4>
-                                        </div>
-                                      </div>
-                                </>
-                            )
-                        })
-                    }
-                </div>
-            </div>
-        </div>
+          ))
+        )}
+      </div>
     </div>
-    </>
-  )
+  );
 }
 
-export default Product
+export default ProductPage;
