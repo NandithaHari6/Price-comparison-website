@@ -1,7 +1,7 @@
 import React ,{useState}from "react";
 import Nav from "./nav";
 import Rout from "./rout";
-import { BrowserRouter  } from "react-router-dom";
+import { BrowserRouter,useNavigate  } from "react-router-dom";
 import Footer from './footer';
 import './App.css';
 
@@ -11,20 +11,17 @@ const App = () => {
   // add to cart
   const [cart, setCart] = useState([])
   //product 
+
   const [searchResults, setSearchResults] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [close, setClose] = useState(false)
   const [detail, setDetail] = useState([])
   const [searchWord, setSearchWord] = useState('');
   const [product, setProduct] = useState(Productdetail)
-  const searchbtn = (product) => 
-  {
-    const change = Productdetail.filter((x) => 
-    {
-      return x.Cat === product
-    })
-    setProduct(change)
-  }
+  const logout=()=>{
+    localStorage.removeItem('accessToken');
+    setIsLoggedIn(false);
+    }
   //product detail
   const view = (product) => 
   {
@@ -54,7 +51,7 @@ const App = () => {
     <>
     
     <BrowserRouter>
-    <Nav searchbtn={searchbtn} setSearchResults = {setSearchResults} isLoggedIn={isLoggedIn} searchWord={searchWord} setSearchWord={setSearchWord} />
+    <Nav  logout={logout} setSearchResults = {setSearchResults} isLoggedIn={isLoggedIn} searchWord={searchWord} setSearchWord={setSearchWord} />
     <Rout product={product} setProduct={setProduct} detail={detail} view={view} searchWord={searchWord} close={close} setClose={setClose} cart={cart} setCart={setCart} addtocart={addtocart} 
     isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} searchResults ={searchResults} setSearchResults = {setSearchResults} />
     <Footer />

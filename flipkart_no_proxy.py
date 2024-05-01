@@ -3,7 +3,7 @@ import requests
 from bs4 import BeautifulSoup
 from  prod_db_op import insert_into_db
 from process_title import process_title
-def flipkart_scrap_ac(link):
+def flipkart_scrap_ac(link,page):
     global count
     base_url="https://www.flipkart.com"
     url = base_url + link
@@ -17,6 +17,7 @@ def flipkart_scrap_ac(link):
     if r.status_code==200:
         soup=BeautifulSoup(r.text,'lxml')
         products=soup.find_all('div',class_="cPHDOP col-12-12")
+        next = soup.find('a', class_="cn++Ap")
         for product in products:
                 prod_title=product.find('div',class_="KzDlHZ")
                 prod_link=product.find('a',class_="CGtC98")
@@ -52,6 +53,7 @@ def flipkart_scrap_ac(link):
         
         
                     insert_into_db("flipkart",base_url+link,title,price,prod_company, image,processed_title)
-                        
+    if page < 1:
+        flipkart_scrap_ac(next['href'], page+1)                        
                     
           

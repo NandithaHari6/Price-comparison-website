@@ -42,19 +42,13 @@ function Login({isLoggedIn,setIsLoggedIn}) {
       console.error('Login failed');
     }
   };
-  const handleLogout = () => {
-    // Remove access token from local storage
-    localStorage.removeItem('accessToken');
-    
-    // Set isLoggedIn state to false
-    setIsLoggedIn(false);
-  };
+
   return (
     <div>
       {isLoggedIn ? (
         <div>
           <p>Welcome! You are logged in.</p>
-          <button onClick={handleLogout}>Logout</button>
+         
           {/* Add logout button here */}
         </div>
       ) : (

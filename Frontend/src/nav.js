@@ -1,34 +1,17 @@
 import React, { useState ,useEffect} from 'react'
 import { FaShoppingCart } from "react-icons/fa";
 import { FaUser } from "react-icons/fa";
-import { CiLogin } from 'react-icons/ci';
-import { CiLogout } from 'react-icons/ci';
+
 import { Link } from 'react-router-dom';
-import { useAuth0 } from "@auth0/auth0-react";
+
 import Logo from "./img/logo.svg";
 import { useNavigate } from 'react-router-dom';
 import './nav.css'
 import {handleSearch } from './handleSearch'
 
-const Nav = ({searchbtn,isLoggedIn,searchWord,setSearchWord,setSearchResults}) => {
+const Nav = ({logout,isLoggedIn,searchWord,setSearchWord,setSearchResults}) => {
     const navigate = useNavigate()
-    const { loginWithRedirect, logout, user, isAuthenticated} = useAuth0();
-    const [showUserDetails, setShowUserDetails] = useState(false);
-
-    useEffect(() => {
-        if (isAuthenticated) {
-            setShowUserDetails(true);
-        }
-    }, [isAuthenticated]);
-   
-    const handleUserIconClick = () => {
-        if (!isLoggedIn) {
-            loginWithRedirect();
-        }
-        else {
-            setShowUserDetails(!showUserDetails);
-        }
-    };
+  
   return (
     <>
    
@@ -41,22 +24,29 @@ const Nav = ({searchbtn,isLoggedIn,searchWord,setSearchWord,setSearchResults}) =
                 <input type='text' value={searchWord} placeholder='Search Your Product...' autoComplete='off' onChange={(e) => setSearchWord(e.target.value)}></input>
                 <button onClick={()=>{
                     handleSearch(searchWord,setSearchResults)
+                    navigate('/product')
                 }}>Search</button>
             </div>
             <div className='icon'>
                 {
                     
                         <div className='account'>
-                        <div className='user_icon' onClick={handleUserIconClick}>
+                        <div className='user_icon' onClick={()=>{
+                             navigate('/login')
+                        }
+                           }>
                             <FaUser />
-                            {showUserDetails && isAuthenticated && <p>Hello, {user.name}</p>}
+                            
                         </div>
                         </div>
                     
                 }
-                <div className='second_icon'>
+                {
+                    isLoggedIn &&  (<div className='second_icon'>
                 <Link to="/cart" className='link'><FaShoppingCart /></Link>
-                </div>
+                </div>)
+                }
+               
             </div>
         </div>
     </div>
@@ -83,17 +73,24 @@ const Nav = ({searchbtn,isLoggedIn,searchWord,setSearchWord,setSearchResults}) =
                     </li>
                     )
                 }
+                {
+                    isLoggedIn && (
+                        <li>
+                       <Link to='/cart'className='link'>WishList</Link>
+                    </li>
+                    )
+                }
+                {
+                    isLoggedIn && (
+                        <li>
+                            <button onClick={logout}> Logout </button>
+                        </li>
+                    )
+                }
                 
             </ul>
             </div>
-            <div className='auth' >
-                {
-                    isAuthenticated ?
-                    <button onClick={() => logout({ logoutParams: { returnTo: window.location.origin } })}><CiLogout />Logout</button>
-                    :
-                    <button onClick={() => loginWithRedirect()}><CiLogin />Login</button>
-                }
-            </div>
+            
         </div>
     </div>
     </>
