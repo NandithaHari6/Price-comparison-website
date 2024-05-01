@@ -13,10 +13,12 @@ function Login({isLoggedIn,setIsLoggedIn}) {
 
   const handleLogin = async () => {
     // Send POST request to /login endpoint
+    
     const response = await fetch('http://127.0.0.1:8000/login', {
       method: 'POST',
       headers: {
-        'Content-Type': 'application/json'
+        'Content-Type': 'application/json',
+       // Add JWT bearer token to headers
       },
       body: JSON.stringify({
         email: email,
