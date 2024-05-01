@@ -10,7 +10,7 @@ def croma_scrap_ac(link):
     url = base_url + link
 
     options = webdriver.ChromeOptions()
-    options.add_experimental_option("detach", True)
+    
 
     options.add_experimental_option('excludeSwitches', ['enable-logging'])
     driver = webdriver.Chrome(options=options)

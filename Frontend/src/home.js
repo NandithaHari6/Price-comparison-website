@@ -46,7 +46,7 @@ const Home = ({detail, view, close, setClose, addtocart}) => {
             </div>
         </div>
     </div>
-    <div className='product_type'>
+    <div className='product_home'>
       <div className='container'>
         <div className='box'>
           <div className='img_box'>
@@ -56,14 +56,7 @@ const Home = ({detail, view, close, setClose, addtocart}) => {
             <p>Smartphones</p>
           </div>
         </div>
-        <div className='box'>
-          <div className='img_box'>
-            <img src={lap} alt='lap'></img>
-          </div>
-          <div className='detail'>
-            <p>Laptops</p>
-          </div>
-        </div>
+        
         <div className='box'>
           <div className='img_box'>
             <img src={ac} alt='ac'></img>

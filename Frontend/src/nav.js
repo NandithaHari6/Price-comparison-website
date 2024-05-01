@@ -20,7 +20,7 @@ const Nav = ({logout,isLoggedIn,searchWord,setSearchWord,setSearchResults}) => {
             <div className='logo'>
                 <img src={Logo} alt='logo'></img>
             </div>
-            <div className='search_box'>
+            <div className='search_box_nav'>
                 <input type='text' value={searchWord} placeholder='Search Your Product...' autoComplete='off' onChange={(e) => setSearchWord(e.target.value)}></input>
                 <button onClick={()=>{
                     handleSearch(searchWord,setSearchResults)
@@ -41,6 +41,15 @@ const Nav = ({logout,isLoggedIn,searchWord,setSearchWord,setSearchResults}) => {
                         </div>
                     
                 }
+                {
+                    isLoggedIn && (
+                        <div className='second_icon'>
+
+
+                            <button onClick={logout}> Logout </button>
+                        </div>)
+                }
+                
                 {
                     isLoggedIn &&  (<div className='second_icon'>
                 <Link to="/cart" className='link'><FaShoppingCart /></Link>
@@ -78,13 +87,6 @@ const Nav = ({logout,isLoggedIn,searchWord,setSearchWord,setSearchResults}) => {
                         <li>
                        <Link to='/cart'className='link'>WishList</Link>
                     </li>
-                    )
-                }
-                {
-                    isLoggedIn && (
-                        <li>
-                            <button onClick={logout}> Logout </button>
-                        </li>
                     )
                 }
                 
