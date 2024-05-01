@@ -1,9 +1,15 @@
 import React, { useState } from 'react';
-
+import { useNavigate } from 'react-router-dom';
 function Login({isLoggedIn,setIsLoggedIn}) {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const navigate = useNavigate()
 
+
+  const handleSignUp = () => {
+    navigate('/signup')
+
+  };
 
   const handleLogin = async () => {
     // Send POST request to /login endpoint
@@ -64,6 +70,7 @@ function Login({isLoggedIn,setIsLoggedIn}) {
             onChange={(e) => setPassword(e.target.value)}
           />
           <button onClick={handleLogin}>Login</button>
+          <button onClick={handleSignUp}>Sign Up</button>
         </div>
       )}
     </div>

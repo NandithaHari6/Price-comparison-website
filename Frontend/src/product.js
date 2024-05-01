@@ -1,32 +1,16 @@
 import React, { useState, useEffect } from 'react';
 
-function ProductPage({ isLoggedIn }) {
-  const [searchWord, setSearchWord] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
+function ProductPage({ isLoggedIn,searchWord,searchResults,setSearchResults}) {
+
   const [loading, setLoading] = useState(true);
 
   useEffect(() => {
+    
     if (searchResults.length > 0) {
       setLoading(false); // Set loading to false once search results are available
     }
   }, [searchResults]);
 
-  const handleSearch = async () => {
-    try {
-      const response = await fetch('http://127.0.0.1:8000/search', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ searchWord }),
-      });
-      const data = await response.json();
-      setSearchResults(data);
-      console.log(searchResults);
-    } catch (error) {
-      console.error(error);
-    }
-  };
 
   const handleAddToWishlist = async (productId, targetPrice) => {
     if (!isLoggedIn) {
@@ -51,10 +35,7 @@ function ProductPage({ isLoggedIn }) {
   return (
     <div>
       <h2>Product Page</h2>
-      <div>
-        <input type="text" value={searchWord} onChange={(e) => setSearchWord(e.target.value)} />
-        <button onClick={handleSearch}>Search</button>
-      </div>
+     
       <div>
         {loading ? (
           <p>Loading...</p>
@@ -80,6 +61,7 @@ function ProductPage({ isLoggedIn }) {
       </div>
     </div>
   );
+  
 }
 
 export default ProductPage;

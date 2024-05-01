@@ -25,16 +25,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class Product(BaseModel):
-    ProductId: int
-    Title: str
-    image: str
-    amazon_link: str 
-    amazon_price: str 
-    flipkart_link: str 
-    f_price: str 
-    Croma_link: str 
-    c_price: str 
 class LoginUser(BaseModel):
     email: str
     password: str
@@ -62,11 +52,11 @@ async def signup(user: User):
 @app.post("/search/")
 def scrap_websites(req:Search):
     search=req.searchWord
-    deleteTable()
-    amazon_scrap_ac("/s?k="+search)
-    flipkart_scrap_ac("/search?q="+search)
-    croma_scrap_ac("searchB?q="+search+"%3Arelevance&text="+search)
-    create_grouping()
+    # deleteTable()
+    # amazon_scrap_ac("/s?k="+search)
+    # flipkart_scrap_ac("/search?q="+search)
+    # croma_scrap_ac("searchB?q="+search+"%3Arelevance&text="+search)
+    # create_grouping()
     conn=sqlite3.connect('product_sample.db')
     c=conn.cursor()
     c.execute("Select * from grouping")
@@ -88,8 +78,6 @@ def scrap_websites(req:Search):
     
     
     
-
-
     conn.commit()
     conn.close()
     

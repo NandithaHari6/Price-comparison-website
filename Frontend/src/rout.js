@@ -5,17 +5,18 @@ import Cart from './cart'
 import Product from './product'
 import Login from './Login'
 import Contact from './contact'
-
-const Rout = ({isLoggedIn,setIsLoggedIn , detail, view, close, setClose, cart, setCart, addtocart}) => {
+import Signup from './Signup'
+const Rout = ({isLoggedIn,setIsLoggedIn , detail, view, searchWord,close, setClose, cart, setCart, addtocart,searchResults,setSearchResults }) => {
   return (
     <>
     <Routes>
-        <Route path='/' element={<Home detail={detail} view={view} close={close} setClose={setClose} addtocart={addtocart}/>}/>
+        <Route path='/' element={<Home detail={detail} view={view} close={close} setClose={setClose} addtocart={addtocart} />}/>
         {/* <Route path='/product' element={<Product product={product} setProduct={setProduct} detail={detail} view={view} close={close} setClose={setClose} addtocart={addtocart}/>} /> */}
-        <Route path='/product' element={<Product isLoggedIn={isLoggedIn}/>} />
+        <Route path='/product' element={<Product isLoggedIn={isLoggedIn}searchResults ={searchResults} setSearchResults = {setSearchResults}searchWord={searchWord}/>} />
         <Route path='/cart' element={<Cart cart={cart} setCart={setCart} />} />
         <Route path='/contact' element={<Contact />} />
         <Route path='/login' element={<Login isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>} />
+        <Route path='/signup' element={<Signup/>} />
 
     </Routes>
     </>
