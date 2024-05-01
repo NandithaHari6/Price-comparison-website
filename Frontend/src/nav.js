@@ -6,10 +6,12 @@ import { CiLogout } from 'react-icons/ci';
 import { Link } from 'react-router-dom';
 import { useAuth0 } from "@auth0/auth0-react";
 import Logo from "./img/logo.svg";
-
+import { useNavigate } from 'react-router-dom';
 import './nav.css'
-const Nav = ({searchbtn,isLoggedIn}) => {
-    const [search, setSearch] = useState('');
+import {handleSearch } from './handleSearch'
+
+const Nav = ({searchbtn,isLoggedIn,searchWord,setSearchWord,setSearchResults}) => {
+    const navigate = useNavigate()
     const { loginWithRedirect, logout, user, isAuthenticated} = useAuth0();
     const [showUserDetails, setShowUserDetails] = useState(false);
 
@@ -18,7 +20,7 @@ const Nav = ({searchbtn,isLoggedIn}) => {
             setShowUserDetails(true);
         }
     }, [isAuthenticated]);
-
+   
     const handleUserIconClick = () => {
         if (!isLoggedIn) {
             loginWithRedirect();
@@ -36,8 +38,10 @@ const Nav = ({searchbtn,isLoggedIn}) => {
                 <img src={Logo} alt='logo'></img>
             </div>
             <div className='search_box'>
-                <input type='text' value={search} placeholder='Search Your Product...' autoComplete='off' onChange={(e) => setSearch(e.target.value)}></input>
-                <button onClick={() => searchbtn (search)}>Search</button>
+                <input type='text' value={searchWord} placeholder='Search Your Product...' autoComplete='off' onChange={(e) => setSearchWord(e.target.value)}></input>
+                <button onClick={()=>{
+                    handleSearch(searchWord,setSearchResults)
+                }}>Search</button>
             </div>
             <div className='icon'>
                 {

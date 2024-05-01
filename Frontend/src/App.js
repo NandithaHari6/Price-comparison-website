@@ -10,11 +10,12 @@ import Productdetail from './productdetail';
 const App = () => {
   // add to cart
   const [cart, setCart] = useState([])
-  //product Detail
+  //product 
+  const [searchResults, setSearchResults] = useState([]);
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [close, setClose] = useState(false)
   const [detail, setDetail] = useState([])
- 
+  const [searchWord, setSearchWord] = useState('');
   const [product, setProduct] = useState(Productdetail)
   const searchbtn = (product) => 
   {
@@ -53,9 +54,9 @@ const App = () => {
     <>
     
     <BrowserRouter>
-    <Nav searchbtn={searchbtn} isLoggedIn={isLoggedIn}/>
-    <Rout product={product} setProduct={setProduct} detail={detail} view={view} close={close} setClose={setClose} cart={cart} setCart={setCart} addtocart={addtocart}
-    isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn}/>
+    <Nav searchbtn={searchbtn} setSearchResults = {setSearchResults} isLoggedIn={isLoggedIn} searchWord={searchWord} setSearchWord={setSearchWord} />
+    <Rout product={product} setProduct={setProduct} detail={detail} view={view} searchWord={searchWord} close={close} setClose={setClose} cart={cart} setCart={setCart} addtocart={addtocart} 
+    isLoggedIn={isLoggedIn} setIsLoggedIn={setIsLoggedIn} searchResults ={searchResults} setSearchResults = {setSearchResults} />
     <Footer />
     </BrowserRouter>
     </>

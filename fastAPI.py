@@ -25,16 +25,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-class Product(BaseModel):
-    ProductId: int
-    Title: str
-    image: str
-    amazon_link: str 
-    amazon_price: str 
-    flipkart_link: str 
-    f_price: str 
-    Croma_link: str 
-    c_price: str 
 class LoginUser(BaseModel):
     email: str
     password: str
@@ -62,11 +52,11 @@ async def signup(user: User):
 @app.post("/search/")
 def scrap_websites(req:Search):
     search=req.searchWord
-    deleteTable()
-    amazon_scrap_ac("/s?k="+search)
-    flipkart_scrap_ac("/search?q="+search)
-    croma_scrap_ac("searchB?q="+search+"%3Arelevance&text="+search)
-    create_grouping()
+    # deleteTable()
+    # amazon_scrap_ac("/s?k="+search)
+    # flipkart_scrap_ac("/search?q="+search)
+    # croma_scrap_ac("searchB?q="+search+"%3Arelevance&text="+search)
+    # create_grouping()
     conn=sqlite3.connect('product_sample.db')
     c=conn.cursor()
     c.execute("Select * from grouping")
@@ -85,11 +75,6 @@ def scrap_websites(req:Search):
               }
         
         formatted_data.append(dict)
-    
-    
-    
-
-
     conn.commit()
     conn.close()
     
@@ -113,8 +98,7 @@ async def add_to_wishlist(wish:Wishlist,email: str = Depends(is_authenticated)):
     if not row:
         raise HTTPException(status_code=404, detail="Product not found")
     print(row)
-    title = row[0]  # Assuming title is the second column in grouping1 table
-    image = row[1]  # Assuming image is the third column in grouping1 table
+
     
     cursor.execute("""insert into WishlistProduct(title ,
         image ,
@@ -123,7 +107,7 @@ async def add_to_wishlist(wish:Wishlist,email: str = Depends(is_authenticated)):
         f_url ,
         f_price,
         c_url ,
-        c_price ) values(?,?,?,?,?,?,?,?)""",(title,image,row[2],row[3],row[4],row[5],row[6],row[7]))
+        c_price ) values(?,?,?,?,?,?,?,?)""",(row[1],row[2],row[3],row[4],row[5],row[6],row[7],row[8]))
     product_id = cursor.lastrowid
     conn.commit()
     cursor.execute('''
@@ -140,7 +124,25 @@ async def show_wishlist(email: str = Depends(is_authenticated)):
     conn=create_connection()
     c=conn.cursor()
     c.execute("SELECT * FROM WishlistProduct where productId in (Select productId from WishlistEntry where email=?)",[email])
-    row=c.fetchall()
+    rows=c.fetchall()
+    formatted_data = []
+    for row in rows:
+        dict={'productId':row[0],
+              'title':row[1],
+              'image':row[2],
+              'a_link':row[3],
+              'a_price':row[4],
+              'f_link':row[5],
+              'f_price':row[6],
+              'c_link':row[7],
+              'c_price':row[8]
+              }
+        c.execute("Select targetPrice from WishlistEntry where email=? and productId=?",[email,row[0]])
+        res=c.fetchone()
+        dict.update({'targetPrice':float(res[0])})
+        formatted_data.append(dict)
+    
+        
     conn.commit()
     conn.close()
-    return row
+    return formatted_data

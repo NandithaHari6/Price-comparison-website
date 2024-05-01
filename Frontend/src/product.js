@@ -1,42 +1,36 @@
 import React, { useState, useEffect } from 'react';
+import Popup from './Popup'
+function ProductPage({ isLoggedIn,searchWord,searchResults,setSearchResults}) {
 
-function ProductPage({ isLoggedIn }) {
-  const [searchWord, setSearchWord] = useState('');
-  const [searchResults, setSearchResults] = useState([]);
   const [loading, setLoading] = useState(true);
-
+  const [showPopup, setShowPopup] = useState(0);
+  const [targetPrice, setTargetPrice] = useState('');
   useEffect(() => {
+    
     if (searchResults.length > 0) {
       setLoading(false); // Set loading to false once search results are available
     }
   }, [searchResults]);
 
-  const handleSearch = async () => {
-    try {
-      const response = await fetch('http://127.0.0.1:8000/search', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ searchWord }),
-      });
-      const data = await response.json();
-      setSearchResults(data);
-      console.log(searchResults);
-    } catch (error) {
-      console.error(error);
-    }
+  const handleInputChange = (e) => {
+    setTargetPrice(e.target.value);
   };
 
+  const handlePopupClose = () => {
+    setShowPopup(0);
+  };
   const handleAddToWishlist = async (productId, targetPrice) => {
     if (!isLoggedIn) {
       return;
     }
+    const accessToken = localStorage.getItem('accessToken');
+
     try {
       const response = await fetch('http://127.0.0.1:8000/add_to_wishlist', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${accessToken}` 
         },
         body: JSON.stringify({ productId, targetPrice }),
       });
@@ -51,10 +45,7 @@ function ProductPage({ isLoggedIn }) {
   return (
     <div>
       <h2>Product Page</h2>
-      <div>
-        <input type="text" value={searchWord} onChange={(e) => setSearchWord(e.target.value)} />
-        <button onClick={handleSearch}>Search</button>
-      </div>
+     
       <div>
         {loading ? (
           <p>Loading...</p>
@@ -70,9 +61,24 @@ function ProductPage({ isLoggedIn }) {
               {product.c_link && <a href={product.c_link}>Croma</a>}
               {product.c_price && <p>Croma Price: {product.c_price}</p>}
               {isLoggedIn && (
-                <button onClick={() => handleAddToWishlist(product.ProductId, product.targetPrice)}>
+                <button onClick={() => {
+                  
+                  setShowPopup(product.productId);
+                }
+                }>{showPopup==product.productId && (
+                  <div >
+                    <button className="close-btn" onClick={()=>{
+                    setShowPopup(0)
+                  }}>Close</button>
+                    <h2>Enter Target Price</h2>
+                    <input type="text" value={targetPrice} onChange={handleInputChange} />
+                    <button onClick={()=>
+                      handleAddToWishlist(product.productId,targetPrice)}>Add to Wishlist</button>
+                  </div>
+                )}
                   Add to Wishlist
                 </button>
+                
               )}
             </div>
           ))
@@ -80,6 +86,7 @@ function ProductPage({ isLoggedIn }) {
       </div>
     </div>
   );
+  
 }
 
 export default ProductPage;
