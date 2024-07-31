@@ -26,7 +26,7 @@ def execute_python_file(file_path):
 # # print("Execution of ProxyServer complete")
 deleteTable()
 
-amazon_scrap_ac("/s?k="+search)
+amazon_scrap_ac("/s?k="+search,0)
 flipkart_scrap_ac("/search?q="+search)
 
 croma_scrap_ac("searchB?q="+search+"%3Arelevance&text="+search)

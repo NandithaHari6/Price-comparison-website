@@ -17,11 +17,11 @@
     display: flex;
     justify-content: space-between;
 }
-.main_header .container .search_box
+.main_header .container .search_box_nav
 {
     margin-right: 30px;
 }
-.main_header .container .search_box input
+.main_header .container .search_box_nav input
 {
     outline: none;
     padding: 10px 30px;
@@ -31,11 +31,11 @@
     font-weight: 600;
     color: #010407;
 }
-.main_header .container .search_box button
+.main_header .container .search_box_nav button
 {
     border: 3px solid #7109a1;
     outline: none;
-    padding: 10px 20px;
+    padding: 10px 10px;
     cursor: pointer;
     background: #7109a1;
     color: #ecf2f7;

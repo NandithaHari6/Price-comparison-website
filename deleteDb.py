@@ -23,16 +23,16 @@ c=conn.cursor()
 # c.execute("Drop table flipkart")
 # c.execute("Drop table amazon")
 # c.execute("Drop table croma")
-c.execute("""CREATE TABLE IF NOT EXISTS users (
-    id INTEGER PRIMARY KEY AUTOINCREMENT,
-    email TEXT UNIQUE,
-    password TEXT,
-    phoneNo INTEGER,
-    name TEXT
-)""")
-c.execute(""" create table if not exists amazon(website text, url text, title text,price text, company text, image text,short_title text)""") 
-c.execute(""" create table if not exists flipkart(website text, url text, title text,price text, company text, image text,short_title text)""") 
-c.execute(""" create table if not exists croma(website text, url text, title text,price text, company text, image text,short_title text)""")
+# c.execute("""CREATE TABLE IF NOT EXISTS users (
+#     id INTEGER PRIMARY KEY AUTOINCREMENT,
+#     email TEXT UNIQUE,
+#     password TEXT,
+#     phoneNo INTEGER,
+#     name TEXT
+# )""")
+# c.execute(""" create table if not exists amazon(website text, url text, title text,price text, company text, image text,short_title text)""") 
+# c.execute(""" create table if not exists flipkart(website text, url text, title text,price text, company text, image text,short_title text)""") 
+# c.execute(""" create table if not exists croma(website text, url text, title text,price text, company text, image text,short_title text)""")
 # c.execute("create view amazon_set as select title,short_title from amazon group by short_title ")
 # c.execute("create view croma_set as select title,short_title from croma group by short_title ")
 # c.execute("create view flipkart_set as select title,short_title from flipkart group by short_title ")
@@ -50,7 +50,7 @@ c.execute(""" create table if not exists croma(website text, url text, title tex
 # c.execute("Create table wishlist(user_email text, product_id number) ")
 
 # res=c.fetchall()
-
+c.execute("Delete from WishlistProduct where productId in (1,2,3,4,5,6,7)")
 # for row in res:
 #     print(row,end="\n\n")
 

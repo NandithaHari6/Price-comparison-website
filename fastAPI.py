@@ -14,9 +14,10 @@ from login import create_access_token,login_auth,is_authenticated
 from addToWishlist import create_connection,create_product_table,create_wishlist_table
 from fastapi.middleware.cors import CORSMiddleware
 import json
+from mangum import Mangum
 app = FastAPI()
 
-
+handler=Mangum(app)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["*"],

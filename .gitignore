@@ -3,3 +3,4 @@ validproxy.txt
 proxylist.txt
 product_sample.db
 __pycache__
+.env

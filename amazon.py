@@ -6,7 +6,9 @@ def amazon_scrap_ac(link,page):
     global count
     base_url="https://www.amazon.in"
     url = base_url + link
-    
+    headers = {
+    'User-Agent': 'Mozilla/5.0 ',
+        }  
     
     with open('validproxy.txt', "r") as f:
         proxiesSet=f.read().split("\n")[:50] 
@@ -14,8 +16,8 @@ def amazon_scrap_ac(link,page):
     while len(proxiesSet) > 0:
         try:
             # ,proxies={"http":proxiesSet[count],"https":proxiesSet[count]},timeout=3
-            r=requests.get(url)
-
+            r=requests.get(url,headers=headers)
+ 
         except:
             continue
         finally:
